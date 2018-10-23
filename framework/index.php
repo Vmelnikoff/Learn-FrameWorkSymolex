@@ -10,6 +10,14 @@ $request = Request::create('/index.php?name=Fabien');
 
 $name = $request->get('name', 'World');
 
-$response = new Response(sprintf('Hello %s', htmlspecialchars($name, ENT_QUOTES, 'UTF-8')));
+//$response = new Response(sprintf('Hello %s', htmlspecialchars($name, ENT_QUOTES, 'UTF-8')));
+$response = new Response();
+
+$response->setContent('Hello world!');
+$response->setStatusCode(200);
+$response->headers->set('Content-Type', 'text/html');
+
+// configure the HTTP cache headers
+$response->setMaxAge(10);
 
 $response->send();
