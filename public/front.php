@@ -6,6 +6,8 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
+use Symfony\Component\HttpKernel\HttpCache\HttpCache;
+use Symfony\Component\HttpKernel\HttpCache\Store;
 use Symfony\Component\Routing;
 
 $request = Request::createFromGlobals();
@@ -22,6 +24,9 @@ $controllerResolver = new ControllerResolver();
 $argumentResolver = new ArgumentResolver();
 
 $framework = new Simplex\Framework($dispatcher, $matcher, $controllerResolver, $argumentResolver);
-$response = $framework->handle($request);
+$framework = new HttpCache(
+    $framework,
+    new Store(__DIR__.'/../var/cache')
+);
 
-$response->send();
+$framework->handle($request)->send();
